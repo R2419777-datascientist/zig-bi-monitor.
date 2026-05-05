@@ -124,6 +124,11 @@ st.sidebar.title(f"Welcome, {st.session_state.username}")
 if st.sidebar.button("Logout"):
     st.session_state.logged_in = False
     st.rerun()
+# Secret Admin View (Only visible to 'admin')
+if st.session_state.get("username") == "admin":
+    if st.sidebar.checkbox("Show User Database"):
+        st.write("### Registered Accounts")
+        st.json(load_users())
 
 refresh_sec = st.sidebar.slider("Refresh (sec)", 30, 120, 60)
 st.sidebar.divider()
