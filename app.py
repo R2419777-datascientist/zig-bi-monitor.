@@ -108,16 +108,31 @@ def get_live_market_data():
     except:
         return pd.DataFrame()
 
+import feedparser
+
 def get_zim_news():
-    rss_urls = ["https://herald.co.zw"]
+    rss_urls = [
+        "https://www.herald.co.zw/feed/"  # example RSS endpoint
+    ]
+
     all_headlines = []
+
     for url in rss_urls:
         try:
             feed = feedparser.parse(url)
+
             for entry in feed.entries[:3]:
-                all_headlines.append({"title": entry.title, "link": entry.link})
-        except: continue
+                all_headlines.append({
+                    "title": entry.get("title", "No title"),
+                    "link": entry.get("link", "No link")
+                })
+
+        except Exception as e:
+            print(f"Error parsing {url}: {e}")
+
     return all_headlines
+
+print(get_zim_news())
 
 # --- 5. DASHBOARD UI (LOGGED IN) ---
 st.sidebar.title(f"Welcome, {st.session_state.username}")
